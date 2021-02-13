@@ -6,16 +6,16 @@ source ./debugtrace.sh
 
 function func1() {
     debugtrace::enter
-    debugtrace::print 'I am func1.'
+    debugtrace::print_message 'I am func1.'
     func2
     debugtrace::leave
 }
 
 function func2() {
     debugtrace::enter
-    debugtrace::print 'I am func2.'
+    debugtrace::print_message 'I am func2.'
 
-    local foo=123
+    local foo="123"
     debugtrace::print foo "$foo"
 
     local array=("a" "b" "c")
@@ -23,6 +23,8 @@ function func2() {
     debugtrace::print 'array[1]' "${array[1]}"
     debugtrace::print 'array[2]' "${array[2]}"
 
+    local FILE="./README.md"
+    debugtrace::print "FILE ($FILE)" "`head $FILE`"
 
     debugtrace::leave
 }
