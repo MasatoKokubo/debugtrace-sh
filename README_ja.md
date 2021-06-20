@@ -70,7 +70,6 @@ debugtrace::print '$@' $@ # ToDo: Remove after debugging
 debugtrace::print '$*' $* # ToDo: Remove after debugging
 ```
 ```log
-2021-06-20 09:21:09+0900 $# = 3 (./readme_example2.sh:9)
 2021-06-20 09:21:09+0900 $@ = arg1 arg2 arg3 (./readme_example2.sh:10)
 2021-06-20 09:21:09+0900 $* = arg1 arg2 arg3 (./readme_example2.sh:11)
 ```
