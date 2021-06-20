@@ -5,7 +5,7 @@
 # (C) 2020 Masato Kokubo
 
 # The start message
-readonly debugtrace_start_message='DebugTrace-bash 1.0.0-alpha2'
+readonly debugtrace_start_message='DebugTrace-bash 1.0.0 beta1'
 
 # The format string of log output when entering functions
 debugtrace_enter_format='Enter ${FUNCNAME[1]} \(${BASH_SOURCE[1]}:$BASH_LINENO\)'
@@ -46,7 +46,7 @@ function debugtrace:::start() {
 # Returns: 0
 function debugtrace::enter() {
   debugtrace:::start
-  echo "`debugtrace::print_current_datetime` `debugtrace::print__indent``eval echo $debugtrace_enter_format`"
+  echo "`debugtrace::print_current_datetime` `debugtrace::print_indent``eval echo $debugtrace_enter_format`"
   debugtrace_nest_level=$(($debugtrace_nest_level + 1))
   return 0
 }
@@ -56,26 +56,27 @@ function debugtrace::enter() {
 # Returns: 0
 function debugtrace::leave() {
   debugtrace_nest_level=$(($debugtrace_nest_level - 1))
-  echo "`debugtrace::print_current_datetime` `debugtrace::print__indent``eval echo $debugtrace_leave_format`"
-  return 0
-}
-
-# Outputs the message if $2 is not specified.
-# Arguments:
-#   $1: The message
-# Returns: 0
-function debugtrace::print_message() {
-  echo "`debugtrace::print_current_datetime` `debugtrace::print__indent`$1 `eval echo $debugtrace_print_surfix`"
+  echo "`debugtrace::print_current_datetime` `debugtrace::print_indent``eval echo $debugtrace_leave_format`"
   return 0
 }
 
 # Outputs the name and value if $2 is specified.
 # Arguments:
-#   $1: The name
-#   $2: The value
+#   $1: A messgae or name of the value (optional)
+#   $2 A value (optional)
 # Returns: 0
 function debugtrace::print() {
-  echo "`debugtrace::print_current_datetime` `debugtrace::print__indent`$1$debugtrace_varname_value_separator$2 `eval echo $debugtrace_print_surfix`"
+  local message="`debugtrace::print_current_datetime` `debugtrace::print_indent`"
+  if [ $# -ge 1 ]; then
+    message=$message$1
+    if [ $# -ge 2 ]; then
+      # name = value
+      shift
+      message="$message$debugtrace_varname_value_separator$*"
+    fi
+    message="$message `eval echo $debugtrace_print_surfix`"
+  fi
+  echo "$message"
   return 0
 }
 
@@ -90,7 +91,7 @@ function debugtrace::print_current_datetime() {
 # Outputs an indent string for the current nesting level.
 # Arguments: None
 # Returns: 0
-function debugtrace::print__indent() {
+function debugtrace::print_indent() {
   local indent=""
   for ((index=0; index<$debugtrace_nest_level; ++index)); do
     indent="$indent$debugtrace_indent_string"
