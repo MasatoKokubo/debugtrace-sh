@@ -12,15 +12,13 @@ By embedding `debugtrace::enter` and `debugtrace::leave` at the start and end of
 
 ### How to use
 
-* Get the `debugtrace.sh` file with one of the following: 
-  * Select `[↓ Code ▼]` -> `Download ZIP` and extract from the downloaded zip file. 
-  * Click the latest version of the Assets zip file from [Releases](https://github.com/MasatoKokubo/debugtrace-bash/releases) and extract it from the downloaded zip file.
-  * Place `debugtrace.sh` in the same directory as the shell scripts to be debugged or in any location.
-  * Insert the following into the script for which you want to output the debug log.
-    1. `source <directory>/debugtrace.sh` at the beginning of script
-    1. `Debugtrace::enter` at the beginning of scripts and functions
-    1. `debugtrace::leave` at the end of scripts and functions
-    1. `debugtrace::leave` just before `return` and `exit` 
+* Click the latest version of the `zip` or `tar.gz` from [Releases](https://github.com/MasatoKokubo/debugtrace-bash/releases) and extract `debugtrace.sh` from the downloaded file.
+* Place `debugtrace.sh` in the same directory as the shell scripts to be debugged or in any location.
+* Insert the following into the script for which you want to output the debug log.
+  1. `source <directory>/debugtrace.sh` at the beginning of script
+  2. `Debugtrace::enter` at the beginning of scripts and functions
+  3. `debugtrace::leave` at the end of scripts and functions
+  4. `debugtrace::leave` just before `return` and `exit` 
 
   _Example:_
   ```bash

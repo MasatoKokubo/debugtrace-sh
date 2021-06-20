@@ -12,11 +12,9 @@
 
 ### 使用方法
 
-* 以下のいずれかで`debugtrace.sh`ファイルを取得します。
-  * `[↓ Code ▼]` -> `Download ZIP`を選択し、ダウンロードしたzipファイルから取り出す。
-  * [Releases](https://github.com/MasatoKokubo/debugtrace-bash/releases) から最新版のAssetsのzipファイルクリックし、ダウンロードしたzipファイルから取り出す。
-* `debugtrace.sh`をデバッグ対象のShell Scriptと同じディレクトリもしくは任意の場所に置きます。
-* デバッグログを出力したいスクリプトに以下挿入します。
+* [Releases](https://github.com/MasatoKokubo/debugtrace-bash/releases) から最新版の`zip`または`tar.gz`をクリックし、ダウンロードしたファイルから`debugtrace.sh`を取り出す。
+* `debugtrace.sh`をデバッグ対象のShell Scriptと同じディレクトリもしくは任意の場所に置く。
+* デバッグログを出力したいスクリプトに以下を挿入する。
   1. 先頭に`source <ディレクトリ>/debugtrace.sh`
   1. スクリプトおよび関数の先頭に`debugtrace::enter`
   1. スクリプトおよび関数の最後に`debugtrace::leave`
