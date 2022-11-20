@@ -1,9 +1,9 @@
-## debugtrace-bash
+## debugtrace-sh
 
 [English](README.md)
 
-*DebugTrace-bash* は、Bashスクリプトのデバッグ時にトレースログを出力するライブラリです。  
-関数の開始と終了箇所に`debugtrace::enter`と`debugtrace::leave`を埋め込む事で、開発中のスクリプロの実行状況を出力する事ができます。
+*debugtrace-sh* は、シェルスクリプトのデバッグ時にトレースログを出力するライブラリです。  
+関数の開始と終了箇所に`debugtrace_enter`と`debugtrace_leave`を埋め込む事で、開発中のスクリプロの実行状況を出力する事ができます。
 
 ### 特徴
 
@@ -16,47 +16,65 @@
 * `debugtrace.sh`をデバッグ対象のShell Scriptと同じディレクトリもしくは任意の場所に置く。
 * デバッグログを出力したいスクリプトに以下を挿入する。
   1. 先頭に`source <ディレクトリ>/debugtrace.sh`
-  1. スクリプトおよび関数の先頭に`debugtrace::enter`
-  1. スクリプトおよび関数の最後に`debugtrace::leave`
-  1. `return`および`exit`直前に`debugtrace::leave`
-  1. 内容を表示したい変数への設定後に`debugtrace::print bar, "$bar"`
+  1. スクリプトおよび関数の先頭に`debugtrace_enter`
+  1. スクリプトおよび関数の最後に`debugtrace_leave`
+  1. `return`および`exit`直前に`debugtrace_leave`
+  1. 内容を表示したい変数への設定後に`debugtrace_print bar, "$bar"`
 
-  _使用例:_
-  ```bash
-  #!/bin/bash
-  source ./debugtrace.sh # ToDo: Remove after debugging
+_使用例:_
+```shell
+source ./debugtrace.sh # ToDo: Remove after debugging
 
-  function foo() {
-    debugtrace::enter # ToDo: Remove after debugging
-    bar="a value"
-    debugtrace::print bar "$bar"
-    debugtrace::leave # ToDo: Remove after debugging
-    return 0
-  }
+function foo() {
+  debugtrace_enter # ToDo: Remove after debugging
+  bar="a value"
+  debugtrace_print bar "$bar" # ToDo: Remove after debugging
+  debugtrace_leave # ToDo: Remove after debugging
+  return 0
+}
 
-  debugtrace::enter # ToDo: Remove after debugging
-  foo
-  debugtrace::leave # ToDo: Remove after debugging
-  ```
+debugtrace_enter # ToDo: Remove after debugging
+foo
+debugtrace_leave # ToDo: Remove after debugging
+```
 
-  _出力例:_
-  ```log
-  DebugTrace-bash 1.0.0 beta1
-  2021-06-20 09:20:01+0900 Enter main (./readme_example1.sh:12)
-  2021-06-20 09:20:01+0900 | Enter foo (./readme_example1.sh:5)
-  2021-06-20 09:20:01+0900 | | bar = a value (./readme_example1.sh:7)
-  2021-06-20 09:20:01+0900 | Leave foo (./readme_example1.sh:8)
-  2021-06-20 09:20:01+0900 Leave main (./readme_example1.sh:14)
-  ```
+_出力例 (Ubuntu/bash):_
+```log
+debugtrace-sh 1.0.0 on GNU bash, version 5.1.16(1)-release (x86_64-pc-linux-gnu)
+2022-11-20 11:16:32+0900 Enter main (./readme_example1.sh:11)
+2022-11-20 11:16:32+0900 | Enter foo (./readme_example1.sh:4)
+2022-11-20 11:16:32+0900 | | bar = a value (./readme_example1.sh:6)
+2022-11-20 11:16:32+0900 | Leave foo (./readme_example1.sh:7)
+2022-11-20 11:16:32+0900 Leave main (./readme_example1.sh:13)
+```
 
+_出力例 (macOS/zsh):_
+```log
+debugtrace-sh 1.0.0 on zsh 5.8.1 (x86_64-apple-darwin21.0)
+2022-11-20 11:25:27+0900 Enter main (./readme_example1.sh:11)
+2022-11-20 11:25:27+0900 | Enter foo (./readme_example1.sh:4)
+2022-11-20 11:25:27+0900 | | bar = a value (./readme_example1.sh:6)
+2022-11-20 11:25:27+0900 | Leave foo (./readme_example1.sh:7)
+2022-11-20 11:25:27+0900 Leave main (./readme_example1.sh:13)
+```
 
-### `debugtrace::print`関数の使用例
+_出力例 (macOS/tcsh):_
+```log
+debugtrace-sh 1.0.0 on tcsh 6.21.00 (Astron) 2019-05-08 (x86_64-apple-darwin) options wide,nls,dl,bye,al,kan,sm,rh,color,filec
+2022-11-20 11:23:59+0900 Enter main (./readme_example1.sh:11)
+2022-11-20 11:23:59+0900 | Enter foo (./readme_example1.sh:4)
+2022-11-20 11:23:59+0900 | | bar = a value (./readme_example1.sh:6)
+2022-11-20 11:23:59+0900 | Leave foo (./readme_example1.sh:7)
+2022-11-20 11:23:59+0900 Leave main (./readme_example1.sh:13)
+```
+
+### `debugtrace_print`関数の使用例
 
 #### メッセージの出力, 改行
-```bash
-debugtrace::print "Hellow"
-debugtrace::print
-debugtrace::print 'World!'
+```shell
+debugtrace_print "Hellow"
+debugtrace_print
+debugtrace_print 'World!'
 ```
 ```log
 2021-06-20 09:21:09+0900 Hellow (./readme_example2.sh:5)
@@ -65,9 +83,9 @@ debugtrace::print 'World!'
 ```
 
 #### 関数の引数をすべて出力する
-```bash
-debugtrace::print '$@' $@ # ToDo: Remove after debugging
-debugtrace::print '$*' $* # ToDo: Remove after debugging
+```shell
+debugtrace_print '$@' $@ # ToDo: Remove after debugging
+debugtrace_print '$*' $* # ToDo: Remove after debugging
 ```
 ```log
 2021-06-20 09:21:09+0900 $@ = arg1 arg2 arg3 (./readme_example2.sh:10)
@@ -75,9 +93,9 @@ debugtrace::print '$*' $* # ToDo: Remove after debugging
 ```
 
 #### ファイル内容を出力する
-```bash
+```shell
 local readonly file_name=./file_example.txt
-debugtrace::print "$file_name" "`cat $file_name`" # ToDo: Remove after debugging
+debugtrace_print "$file_name" "`cat $file_name`" # ToDo: Remove after debugging
 ```
 ```log
 2021-06-20 09:21:09+0900 ./file_example.txt = Foo
