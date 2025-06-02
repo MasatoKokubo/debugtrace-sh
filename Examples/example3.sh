@@ -1,4 +1,6 @@
-source ../debugtrace.sh
+#!/bin/bash
+declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
+source $SCRIPT_DIR/../debugtrace.sh
 
 foo() {
   debugtrace_enter

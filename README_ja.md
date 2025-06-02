@@ -17,19 +17,21 @@
 * デバッグログを出力したいスクリプトに以下を挿入する。
   1. 先頭に`source <ディレクトリ>/debugtrace.sh`
   1. スクリプトおよび関数の先頭に`debugtrace_enter`
-  1. スクリプトおよび関数の最後に`debugtrace_leave`
-  1. `return`および`exit`直前に`debugtrace_leave`
+  1. スクリプトおよび関数の最後に`debugtrace_leave $?`
+  1. `return`および`exit`直前に`debugtrace_leave $?`
   1. 内容を表示したい変数への設定後に`debugtrace_print bar, "$bar"`
 
 _使用例:_
 ```shell
-source ../debugtrace.sh
+#!/bin/bash
+declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
+source $SCRIPT_DIR/../debugtrace.sh
 
 foo() {
   debugtrace_enter
   declare bar='a value'
   debugtrace_print bar "$bar"
-  debugtrace_leave
+  debugtrace_leave $?
 }
 
 debugtrace_enter
@@ -39,32 +41,12 @@ debugtrace_leave
 
 _出力例 (Linux/bash):_
 ```log
-debugtrace-sh 1.1.0 on GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)
-2025-01-05 11:44:33+0900 Enter main (./readme_example1.sh:10)
-2025-01-05 11:44:33+0900 | Enter foo (./readme_example1.sh:4)
-2025-01-05 11:44:33+0900 | | bar = 'a value' (./readme_example1.sh:6)
-2025-01-05 11:44:33+0900 | Leave foo (./readme_example1.sh:7)
-2025-01-05 11:44:33+0900 Leave main (./readme_example1.sh:12)
-```
-
-_出力例 (macOS/zsh):_
-```log
-debugtrace-sh 1.1.0 on zsh 5.9 (arm64-apple-darwin24.0)
-2025-01-05 11:46:06+0900 Enter main (./readme_example1.sh:10)
-2025-01-05 11:46:06+0900 | Enter foo (./readme_example1.sh:4)
-2025-01-05 11:46:06+0900 | | bar = 'a value' (./readme_example1.sh:6)
-2025-01-05 11:46:06+0900 | Leave foo (./readme_example1.sh:7)
-2025-01-05 11:46:06+0900 Leave main (./readme_example1.sh:12)
-```
-
-_出力例 (macOS/tcsh):_
-```log
-debugtrace-sh 1.1.0 on tcsh 6.21.00 (Astron) 2019-05-08 (unknown-apple-darwin) options wide,nls,dl,bye,al,kan,sm,rh,color,filec
-2025-01-05 11:46:57+0900 Enter main (./readme_example1.sh:10)
-2025-01-05 11:46:57+0900 | Enter foo (./readme_example1.sh:4)
-2025-01-05 11:46:57+0900 | | bar = 'a value' (./readme_example1.sh:6)
-2025-01-05 11:46:57+0900 | Leave foo (./readme_example1.sh:7)
-2025-01-05 11:46:57+0900 Leave main (./readme_example1.sh:12)
+debugtrace-sh 1.2.0 on GNU bash, version 5.1.8(1)-release (x86_64-redhat-linux-gnu)
+2025-06-02 21:24:42+0900 Enter main (Examples/readme_example1.sh:12)
+2025-06-02 21:24:42+0900 | Enter foo (Examples/readme_example1.sh:6)
+2025-06-02 21:24:42+0900 | | bar = 'a value' (Examples/readme_example1.sh:8)
+2025-06-02 21:24:42+0900 | Leave foo (Examples/readme_example1.sh:9)
+2025-06-02 21:24:42+0900 Leave main (Examples/readme_example1.sh:14)
 ```
 
 ### `debugtrace_print`関数の使用例

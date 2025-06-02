@@ -1,4 +1,6 @@
-source ../debugtrace.sh
+#!/bin/bash
+declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
+source $SCRIPT_DIR/../debugtrace.sh
 
 foo() {
   # Output all arguments of the function
@@ -14,7 +16,7 @@ debugtrace_print 'World!'
 foo arg1 arg2 arg3
 
 # Output a file contents
-declare -r file_name=file_example.txt
+declare -r file_name=$SCRIPT_DIR/file_example.txt
 debugtrace_print "$file_name" "`cat $file_name`"
 
 # Output an array

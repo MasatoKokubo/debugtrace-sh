@@ -3,40 +3,40 @@
 # (C) 2020 Masato Kokubo
 
 # The start message
-declare -r debugtrace_start_message='debugtrace-sh 1.1.0'
+declare -gr debugtrace_start_message='debugtrace-sh 1.2.0'
 
 # The string of log output when entering functions
-declare debugtrace_enter_string='Enter '
+declare -g debugtrace_enter_string='Enter '
 
 # The format string of log output when entering functions (DO NOT CHANGE)
-declare _debugtrace_enter_string
+declare -g _debugtrace_enter_string
 
 # The format string of log output when leaving functions
-declare debugtrace_leave_string='Leave '
+declare -g debugtrace_leave_string='Leave '
 
 # The format string of log output when leaving functions (DO NOT CHANGE)
-declare _debugtrace_leave_string
+declare -g _debugtrace_leave_string
 
 # The date format string
-declare debugtrace_datetime_format='%Y-%m-%d %H:%M:%S%z'
+declare -g debugtrace_datetime_format='%Y-%m-%d %H:%M:%S%z'
 
 # The format string of print suffix
-declare debugtrace_print_surfix=' \(${BASH_SOURCE[1]}:$BASH_LINENO\)'
+declare -g debugtrace_print_surfix=' \(${BASH_SOURCE[1]}:$BASH_LINENO\)'
 
 # The indentation string for one nest
-declare debugtrace_indent_string='| '
+declare -g debugtrace_indent_string='| '
 
 # The separator string between the variable name and value
-declare debugtrace_varname_value_separator=' = '
+declare -g debugtrace_varname_value_separator=' = '
 
 # The array element delimiter
-declare debugtrace_elements_delimiter=', '
+declare -g debugtrace_elements_delimiter=', '
 
 # The current nesint level (DO NOT CHANGE)
-declare _debugtrace_nest_level=0
+declare -g _debugtrace_nest_level=0
 
 # Becomes true after start (DO NOT CHANGE)
-declare _debugtrace_started=false
+declare -g _debugtrace_started=false
 
 # Outputs the start message only the first time.
 # Arguments: None
@@ -59,11 +59,16 @@ debugtrace_enter() {
 }
 
 # By calling this when leaving an execution block such as a function, outputs a leaving log.
-# Arguments: None
+# Arguments: the return value
+#   $1: The return value (optional)
+# Return: $1 if specified, 0 otherwise
 debugtrace_leave() {
   debugtrace_start
   _debugtrace_nest_level=$(($_debugtrace_nest_level - 1))
   echo "`debugtrace_print_current_datetime` `debugtrace_print_indent``eval echo $_debugtrace_leave_string`" >&2
+  if [[ $# -ge 1 ]]; then
+    return $1
+  fi
 }
 
 # Outputs the name and value if $2 is specified.

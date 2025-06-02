@@ -2,7 +2,7 @@
 
 [Japanese](README_ja.md)
 
-*debugtrace-sh* is a shell script library that outputs trace logs to `stderr` when debugging shell scripts.  
+*debugtrace-sh* is a bash script library that outputs trace logs to `stderr` when debugging shell scripts.  
 By embedding `debugtrace_enter` and `debugtrace_leave` at the start and end of functions, you can output the execution status of the shell script under development to the log.
 
 ### Features
@@ -17,18 +17,20 @@ By embedding `debugtrace_enter` and `debugtrace_leave` at the start and end of f
 * Insert the following into the script for which you want to output the debug log.
   1. `source <directory>/debugtrace.sh` at the beginning of script
   2. `Debugtrace_enter` at the beginning of scripts and functions
-  3. `debugtrace_leave` at the end of scripts and functions
+  3. `debugtrace_leave $?` at the end of scripts and functions
   4. `debugtrace_leave` just before `return` or `exit` 
 
 _Example:_
 ```shell
-source ../debugtrace.sh
+#!/bin/bash
+declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
+source $SCRIPT_DIR/../debugtrace.sh
 
 foo() {
   debugtrace_enter
   declare bar='a value'
   debugtrace_print bar "$bar"
-  debugtrace_leave
+  debugtrace_leave $?
 }
 
 debugtrace_enter
@@ -38,32 +40,12 @@ debugtrace_leave
 
 _Output (Linux/bash):_
 ```log
-debugtrace-sh 1.1.0 on GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)
-2025-01-05 11:44:33+0900 Enter main (./readme_example1.sh:10)
-2025-01-05 11:44:33+0900 | Enter foo (./readme_example1.sh:4)
-2025-01-05 11:44:33+0900 | | bar = 'a value' (./readme_example1.sh:6)
-2025-01-05 11:44:33+0900 | Leave foo (./readme_example1.sh:7)
-2025-01-05 11:44:33+0900 Leave main (./readme_example1.sh:12)
-```
-
-_Output (macOS/zsh):_
-```log
-debugtrace-sh 1.1.0 on zsh 5.9 (arm64-apple-darwin24.0)
-2025-01-05 11:46:06+0900 Enter main (./readme_example1.sh:10)
-2025-01-05 11:46:06+0900 | Enter foo (./readme_example1.sh:4)
-2025-01-05 11:46:06+0900 | | bar = 'a value' (./readme_example1.sh:6)
-2025-01-05 11:46:06+0900 | Leave foo (./readme_example1.sh:7)
-2025-01-05 11:46:06+0900 Leave main (./readme_example1.sh:12)
-```
-
-_Output (macOS/tcsh):_
-```log
-debugtrace-sh 1.1.0 on tcsh 6.21.00 (Astron) 2019-05-08 (unknown-apple-darwin) options wide,nls,dl,bye,al,kan,sm,rh,color,filec
-2025-01-05 11:46:57+0900 Enter main (./readme_example1.sh:10)
-2025-01-05 11:46:57+0900 | Enter foo (./readme_example1.sh:4)
-2025-01-05 11:46:57+0900 | | bar = 'a value' (./readme_example1.sh:6)
-2025-01-05 11:46:57+0900 | Leave foo (./readme_example1.sh:7)
-2025-01-05 11:46:57+0900 Leave main (./readme_example1.sh:12)
+debugtrace-sh 1.2.0 on GNU bash, version 5.1.8(1)-release (x86_64-redhat-linux-gnu)
+2025-06-02 21:24:42+0900 Enter main (Examples/readme_example1.sh:12)
+2025-06-02 21:24:42+0900 | Enter foo (Examples/readme_example1.sh:6)
+2025-06-02 21:24:42+0900 | | bar = 'a value' (Examples/readme_example1.sh:8)
+2025-06-02 21:24:42+0900 | Leave foo (Examples/readme_example1.sh:9)
+2025-06-02 21:24:42+0900 Leave main (Examples/readme_example1.sh:14)
 ```
 
 ### Example of using `debugtrace_print` function
