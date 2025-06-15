@@ -24,12 +24,14 @@
 _使用例:_
 ```shell
 #!/bin/bash
+set -o nounset -o pipefail
 declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
 source $SCRIPT_DIR/../debugtrace.sh
+source $SCRIPT_DIR/debugtrace_option.sh
 
 foo() {
   debugtrace_enter
-  declare bar='a value'
+  bar='a value'
   debugtrace_print bar "$bar"
   debugtrace_leave $?
 }
@@ -39,14 +41,29 @@ foo
 debugtrace_leave
 ```
 
-_出力例 (Linux/bash):_
+_debugtrace_opition.sh_
+```shell
+#debugtrace_output_destination=/dev/stderr
+#debugtrace_output_destination=/dev/stdout
+debugtrace_output_destination=/tmp/debugtrace.log
+
+debugtrace_enter_string='┌ '
+debugtrace_leave_string='└ '
+debugtrace_datetime_format='%Y-%m-%d %H:%M:%S.%N%z'
+debugtrace_print_surfix=' \(${BASH_SOURCE[1]}:$BASH_LINENO\)'
+debugtrace_indent_string='│ '
+debugtrace_varname_value_separator=' = '
+debugtrace_elements_delimiter=', '
+```
+
+_出力例 (/tmp/debugtrace.log):_
 ```log
-debugtrace-sh 1.2.0 on GNU bash, version 5.1.8(1)-release (x86_64-redhat-linux-gnu)
-2025-06-02 21:24:42+0900 Enter main (Examples/readme_example1.sh:12)
-2025-06-02 21:24:42+0900 | Enter foo (Examples/readme_example1.sh:6)
-2025-06-02 21:24:42+0900 | | bar = 'a value' (Examples/readme_example1.sh:8)
-2025-06-02 21:24:42+0900 | Leave foo (Examples/readme_example1.sh:9)
-2025-06-02 21:24:42+0900 Leave main (Examples/readme_example1.sh:14)
+debugtrace-sh 1.3.0 on GNU bash, version 5.1.8(1)-release (x86_64-redhat-linux-gnu)
+2025-06-16 07:54:10.326222661+0900 ┌ main (Examples/readme_example1.sh:14)
+2025-06-16 07:54:10.329924004+0900 │ ┌ foo (Examples/readme_example1.sh:8)
+2025-06-16 07:54:10.332389876+0900 │ │ bar = 'a value' (Examples/readme_example1.sh:10)
+2025-06-16 07:54:10.334506128+0900 │ └ foo (Examples/readme_example1.sh:11)
+2025-06-16 07:54:10.337021584+0900 └ main (Examples/readme_example1.sh:16)
 ```
 
 ### `debugtrace_print`関数の使用例

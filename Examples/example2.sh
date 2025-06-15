@@ -1,10 +1,8 @@
 #!/bin/bash
+set -o nounset -o pipefail
 declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
 source $SCRIPT_DIR/../debugtrace.sh
-
-debugtrace_enter_string='┌ '
-debugtrace_leave_string='└ '
-debugtrace_indent_string='│ '
+source $SCRIPT_DIR/debugtrace_option.sh
 
 foo() {
   debugtrace_enter
@@ -17,7 +15,7 @@ foo() {
   debugtrace_print '$*' "$*"
 
   declare -r file_name=$SCRIPT_DIR/file_example.txt
-  debugtrace_print $file_name "`cat $file_name`"
+  debugtrace_print $file_name "$(cat $file_name)"
   debugtrace_leave $?
 }
 

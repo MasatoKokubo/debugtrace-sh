@@ -1,6 +1,8 @@
 #!/bin/bash
+set -o nounset -o pipefail
 declare -r SCRIPT_DIR=$(cd $(dirname $0);pwd)
 source $SCRIPT_DIR/../debugtrace.sh
+source $SCRIPT_DIR/debugtrace_option.sh
 
 foo() {
   debugtrace_enter
